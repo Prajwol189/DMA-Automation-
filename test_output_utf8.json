@@ -1,0 +1,417 @@
+﻿{
+  "config": {
+    "configFile": "D:\\automation\\automation-flow\\playwright.config.ts",
+    "rootDir": "D:/automation/automation-flow/test",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "D:/automation/automation-flow/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/automation/automation-flow/test",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 8,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "user_creation.spec.ts",
+      "file": "user_creation.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "User Creation - All Roles",
+          "file": "user_creation.spec.ts",
+          "line": 18,
+          "column": 15,
+          "specs": [
+            {
+              "title": "Create user with role: Data editor",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 17552,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('textbox', { name: 'Choose' })\nExpected pattern: \u001b[32m/Data editor/i\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Choose' })\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('textbox', { name: 'Choose' })\nExpected pattern: \u001b[32m/Data editor/i\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Choose' })\u001b[22m\n\n    at UserManagementPage.selectRole (D:\\automation\\automation-flow\\pages\\UserManagementPage.ts:63:28)\n    at UserManagementPage.fillUserForm (D:\\automation\\automation-flow\\pages\\UserManagementPage.ts:75:5)\n    at D:\\automation\\automation-flow\\test\\user_creation.spec.ts:46:7",
+                        "location": {
+                          "file": "D:\\automation\\automation-flow\\pages\\UserManagementPage.ts",
+                          "column": 28,
+                          "line": 63
+                        },
+                        "snippet": "\u001b[90m   at \u001b[39m..\\pages\\UserManagementPage.ts:63\n\n\u001b[0m \u001b[90m 61 |\u001b[39m\n \u001b[90m 62 |\u001b[39m     \u001b[90m// 4∩╕ÅΓâú Optional: ensure the dropdown shows the selected value\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 63 |\u001b[39m     \u001b[36mawait\u001b[39m expect(dropdown)\u001b[33m.\u001b[39mtoHaveValue(\u001b[36mnew\u001b[39m \u001b[33mRegExp\u001b[39m(role\u001b[33m,\u001b[39m \u001b[32m\"i\"\u001b[39m))\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 64 |\u001b[39m   }\n \u001b[90m 65 |\u001b[39m\n \u001b[90m 66 |\u001b[39m   \u001b[36masync\u001b[39m fillUserForm(details\u001b[33m:\u001b[39m {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\automation\\automation-flow\\pages\\UserManagementPage.ts",
+                            "column": 28,
+                            "line": 63
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveValue\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('textbox', { name: 'Choose' })\nExpected pattern: \u001b[32m/Data editor/i\u001b[39m\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toHaveValue\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('textbox', { name: 'Choose' })\u001b[22m\n\n\n   at ..\\pages\\UserManagementPage.ts:63\n\n  61 |\n  62 |     // 4∩╕ÅΓâú Optional: ensure the dropdown shows the selected value\n> 63 |     await expect(dropdown).toHaveValue(new RegExp(role, \"i\"));\n     |                            ^\n  64 |   }\n  65 |\n  66 |   async fillUserForm(details: {\n    at UserManagementPage.selectRole (D:\\automation\\automation-flow\\pages\\UserManagementPage.ts:63:28)\n    at UserManagementPage.fillUserForm (D:\\automation\\automation-flow\\pages\\UserManagementPage.ts:75:5)\n    at D:\\automation\\automation-flow\\test\\user_creation.spec.ts:46:7"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:07.435Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\automation\\automation-flow\\test-results\\user_creation-User-Creatio-d24e2--user-with-role-Data-editor-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\automation\\automation-flow\\pages\\UserManagementPage.ts",
+                        "column": 28,
+                        "line": 63
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-22b333ebc11e8784bf5d",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Data user",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-8e1a87c13e019ad1944e",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Municipal admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-de10af732d57ff14b1ef",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Municipal editor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-884591122bbda329e366",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Municipal viewer",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-73be641a6680bd4944ba",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Super admin",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-eee1bf0c77d868cc0b1f",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Ward boundary editor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-124a72f9e76e37a865c8",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Ward editor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-ea0dbc1d23b850151aa6",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            },
+            {
+              "title": "Create user with role: Ward viewer",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-01-06T09:12:25.416Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "411f0988ed66b3755ff7-329a600ba9c58d7bdbeb",
+              "file": "user_creation.spec.ts",
+              "line": 33,
+              "column": 9
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-01-06T09:12:06.670Z",
+    "duration": 18762.164,
+    "expected": 0,
+    "skipped": 8,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
