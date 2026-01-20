@@ -18,19 +18,27 @@ test.describe("Login Functionality", () => {
   });
 
   test("Invalid Login - Wrong Password", async ({ page }) => {
-    // Listen for the login API response
-    const responsePromise = page.waitForResponse(
-      (response) =>
-        response.request().method() === "POST" && response.status() !== 200,
-    );
+    const [response] = await Promise.all([
+      page.waitForResponse(
+        (res) =>
+          res.url().includes("/api/v1/user/sign-in/") &&
+          res.request().method() === "POST" &&
+          res.status() === 401,
+      ),
+      loginPage.login(
+        CREDENTIALS.valid.email,
+        CREDENTIALS.invalid.wrongPassword,
+      ),
+    ]);
 
-    await loginPage.login(
-      CREDENTIALS.valid.email,
-      CREDENTIALS.invalid.wrongPassword,
-    );
+    const responseBody = await response.json();
 
-    // Safer check: Verify we are still on the login page
-    await expect(page).toHaveURL(/.*login/);
+    // 🔍 Flexible validation (handles dynamic messages)
+    expect(responseBody.detail).toMatch(/invalid|incorrect password/i);
+
+    // 🔍 UI validation
+    await expect(page).toHaveURL(/login/);
+    await expect(page.getByText(/invalid password|incorrect/i)).toBeVisible();
   });
 
   test("Invalid Login - Wrong Email", async ({ page }) => {
