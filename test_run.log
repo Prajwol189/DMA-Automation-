@@ -1,0 +1,29 @@
+
+Running 1 test using 1 worker
+
+[1A[2K[1/1] [chromium] › test\add_building.spec.ts:20:7 › Add Building - Full Flow (Smooth Dropdowns) › Add new building with complete flow
+[1A[2K  1) [chromium] › test\add_building.spec.ts:20:7 › Add Building - Full Flow (Smooth Dropdowns) › Add new building with complete flow 
+
+    Error: locator.fill: Target page, context or browser has been closed
+    Call log:
+    [2m  - waiting for getByPlaceholder('Enter Plinth Area of Building')[22m
+
+
+       at ..\pages\AddBuildingPage.ts:199
+
+      197 |
+      198 |   async fillPlinthArea(value: string) {
+    > 199 |     await this.plinthArea.fill(value);
+          |                           ^
+      200 |   }
+      201 |
+      202 |   async submitForm() {
+        at AddBuildingPage.fillPlinthArea (D:\automation\automation-flow\pages\AddBuildingPage.ts:199:27)
+        at D:\automation\automation-flow\test\add_building.spec.ts:71:24
+
+
+[1A[2K  1 failed
+    [chromium] › test\add_building.spec.ts:20:7 › Add Building - Full Flow (Smooth Dropdowns) › Add new building with complete flow 
+
+[36m  Serving HTML report at http://localhost:9323. Press Ctrl+C to quit.[39m
+Terminate batch job (Y/N)? 
