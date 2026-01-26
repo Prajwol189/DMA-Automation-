@@ -17,13 +17,9 @@ test.describe("User Creation - All Roles", () => {
   let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
     userPage = new UserManagementPage(page);
 
-    await loginPage.goto();
-    await loginPage.login(CREDENTIALS.valid.email, CREDENTIALS.valid.password);
-
-    await userPage.goto();
+    await page.goto("/user-management");
   });
 
   for (const role of ROLES) {

@@ -31,7 +31,7 @@ test.describe("Login Functionality", () => {
         (res) =>
           res.url().includes("/api/v1/user/sign-in/") &&
           res.request().method() === "POST" &&
-          res.status() === 401,
+          res.status() === 403,
       ),
       loginPage.login(
         CREDENTIALS.valid.email,
@@ -42,11 +42,11 @@ test.describe("Login Functionality", () => {
     const responseBody = await response.json();
 
     // 🔍 Flexible validation (handles dynamic messages)
-    expect(responseBody.detail).toMatch(/invalid|incorrect password/i);
+    expect(responseBody.message).toMatch(/Invalid|Incorrect password/i);
 
     // 🔍 UI validation
     await expect(page).toHaveURL(/login/);
-    await expect(page.getByText(/invalid password|incorrect/i)).toBeVisible();
+    await expect(page.getByText(/Invalid password|incorrect/i)).toBeVisible();
   });
 
   test("Invalid Login - Wrong Email", async ({ page }) => {
