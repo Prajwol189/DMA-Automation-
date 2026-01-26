@@ -6,15 +6,15 @@
       "localStorage": [
         {
           "name": "accessToken",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MDk3MDg4LCJpYXQiOjE3NjkwNzU0ODgsImp0aSI6IjRiYTQ3NDZmOGEzZTQzOTQ5N2IxN2ZiM2U4MDg3ZjgyIiwidXNlcl9pZCI6MjIxfQ.lxAaTHe-lbv_nRJJMukBrQwAdylIWEL11j-MPL7zxiY"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MTYzOTUxLCJpYXQiOjE3NjkxNDIzNTEsImp0aSI6ImQ4OGFjMzI1MmE3ODRiNGJiYzg4YTRhMTI1ZmFmZDdiIiwidXNlcl9pZCI6MjIxfQ.V0IyFTQPWZmhewN-Ppl7vgMI3KOfVE-A8kAYW15Y8kM"
         },
         {
           "name": "persist:user",
-          "value": "{\"user\":\"{\\\"refresh\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTE2MTg4OCwiaWF0IjoxNzY5MDc1NDg4LCJqdGkiOiJlNjk2YzFmN2UzYjA0OWY0YTgzNDczZjQxZWRmMzMzNyIsInVzZXJfaWQiOjIyMX0.aKHtxnJSydDfkGhLYiNxy8RQUwiLar1tyjy4eqrioVk\\\",\\\"access\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MDk3MDg4LCJpYXQiOjE3NjkwNzU0ODgsImp0aSI6IjRiYTQ3NDZmOGEzZTQzOTQ5N2IxN2ZiM2U4MDg3ZjgyIiwidXNlcl9pZCI6MjIxfQ.lxAaTHe-lbv_nRJJMukBrQwAdylIWEL11j-MPL7zxiY\\\",\\\"user_id\\\":221,\\\"email\\\":\\\"municipaleditor@mailinator.com\\\",\\\"username\\\":\\\"Municipaleditor\\\"}\",\"userProfile\":\"null\",\"permissions\":\"[]\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
+          "value": "{\"user\":\"{\\\"refresh\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTIyODc1MSwiaWF0IjoxNzY5MTQyMzUxLCJqdGkiOiIyYjFiZjYxMzc4Mzk0ZmM1OWI0ZGVmOTYxYzM1OTdhNCIsInVzZXJfaWQiOjIyMX0.ZLbOYg__EviIFUsfCWTzHrF0Y3gR2hMiLpEm-VQ_p2E\\\",\\\"access\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MTYzOTUxLCJpYXQiOjE3NjkxNDIzNTEsImp0aSI6ImQ4OGFjMzI1MmE3ODRiNGJiYzg4YTRhMTI1ZmFmZDdiIiwidXNlcl9pZCI6MjIxfQ.V0IyFTQPWZmhewN-Ppl7vgMI3KOfVE-A8kAYW15Y8kM\\\",\\\"user_id\\\":221,\\\"email\\\":\\\"municipaleditor@mailinator.com\\\",\\\"username\\\":\\\"Municipaleditor\\\"}\",\"userProfile\":\"null\",\"permissions\":\"[]\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
         },
         {
           "name": "refreshToken",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTE2MTg4OCwiaWF0IjoxNzY5MDc1NDg4LCJqdGkiOiJlNjk2YzFmN2UzYjA0OWY0YTgzNDczZjQxZWRmMzMzNyIsInVzZXJfaWQiOjIyMX0.aKHtxnJSydDfkGhLYiNxy8RQUwiLar1tyjy4eqrioVk"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTIyODc1MSwiaWF0IjoxNzY5MTQyMzUxLCJqdGkiOiIyYjFiZjYxMzc4Mzk0ZmM1OWI0ZGVmOTYxYzM1OTdhNCIsInVzZXJfaWQiOjIyMX0.ZLbOYg__EviIFUsfCWTzHrF0Y3gR2hMiLpEm-VQ_p2E"
         }
       ]
     }
