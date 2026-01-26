@@ -17,6 +17,11 @@ export class VisualizationPage {
   readonly resultText: Locator;
   readonly buildingToggle: Locator;
   readonly roadToggle: Locator;
+  readonly straightenBtn: Locator;
+  readonly toolbarImg2: Locator;
+  readonly distanceTool: Locator;
+  readonly gpsBtn: Locator;
+  readonly pinDropBtn: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -35,6 +40,12 @@ export class VisualizationPage {
     this.resultText = page.getByText("Proximity Result");
     this.buildingToggle = page.getByRole("switch").first();
     this.roadToggle = page.getByRole("switch").nth(1);
+    this.straightenBtn = page.getByRole("button", { name: "straighten" });
+    this.toolbarImg2 = page.getByRole("img").nth(2);
+    this.distanceTool = page.locator("div").filter({ hasText: /^दूरी$/ });
+
+    this.gpsBtn = page.getByText("my_location");
+    this.pinDropBtn = page.getByText("pin_dropस्थान प्राप्त गर्नुहोस्");
   }
 
   // ================= Map Layer / Toggle Methods =================
@@ -101,6 +112,7 @@ export class VisualizationPage {
     );
     await toggle.click();
     await this.refreshMapTiles();
+
     const response = await waitApi;
     expect(response).not.toBeNull();
     expect(response.ok()).toBeTruthy();
@@ -238,5 +250,69 @@ export class VisualizationPage {
   async toggleRoadOff() {
     await this.roadToggle.click();
     await this.verifyApiNotCalled("/api/v1/tile/road-vector-tile/");
+  }
+  ///////////////Mesurement Methods////////////////////
+  async openDistanceTool() {
+    await this.straightenBtn.click();
+    await this.toolbarImg2.click();
+    await this.distanceTool.click();
+  }
+
+  async drawDistance(points: { x: number; y: number }[]) {
+    for (const p of points) {
+      await this.clickOnMap(p.x, p.y);
+    }
+  }
+
+  // Extract numeric value from text like "652.94 m"
+  async getMeterValue(text: string): Promise<number> {
+    const locator = this.page.getByText(text, { exact: true });
+    await expect(locator).toBeVisible();
+
+    const raw = await locator.textContent();
+    if (!raw) throw new Error(`Text not found for: ${text}`);
+
+    return parseFloat(raw.replace("m", "").trim());
+  }
+
+  async expectSumEqualsTotal(parts: string[], totalText: string) {
+    let sum = 0;
+
+    for (const t of parts) {
+      sum += await this.getMeterValue(t);
+    }
+
+    const total = await this.getMeterValue(totalText);
+
+    // Allow tiny floating-point differences up to 5 cm
+    const diff = Math.abs(sum - total);
+    expect(diff).toBeLessThan(0.05);
+  }
+
+  async openGpsPinTool() {
+    await this.gpsBtn.click();
+    await this.pinDropBtn.click();
+  }
+  async clickMapAndVerifyApi(
+    x: number,
+    y: number,
+    expectedLat: number,
+    expectedLon: number,
+  ) {
+    const [request] = await Promise.all([
+      this.page.waitForRequest(
+        (req) =>
+          req.url().includes("/api/v1/my-location-info") &&
+          req.method() === "GET",
+      ),
+      this.mapRegion.click({ position: { x, y } }),
+    ]);
+
+    const url = new URL(request.url());
+    const lat = parseFloat(url.searchParams.get("latitude") || "0");
+    const lon = parseFloat(url.searchParams.get("longitude") || "0");
+
+    expect(lat).toBeCloseTo(expectedLat, 6);
+    expect(lon).toBeCloseTo(expectedLon, 6);
   }
 }
