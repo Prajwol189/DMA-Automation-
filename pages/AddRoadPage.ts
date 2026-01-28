@@ -21,6 +21,17 @@ export class AddRoadPage {
   readonly nextButton: Locator;
   readonly completeButton: Locator;
   readonly submitAnywaysButton: Locator;
+  readonly homeButton: Locator;
+  readonly moreMenuButton: Locator;
+  readonly editButton: Locator;
+  readonly infoButton: Locator;
+  readonly previewButton: Locator;
+  readonly closePreviewButton: Locator;
+  readonly deleteButton: Locator;
+  readonly deleteConfirmButton: Locator;
+  readonly searchBox: Locator;
+  readonly noDataCell: Locator;
+  readonly deleteConfirmInput: Locator;
 
   // Map
   readonly mapRegion: Locator;
@@ -66,6 +77,47 @@ export class AddRoadPage {
     });
     this.submitAnywaysButton = page.getByRole("button", {
       name: "Submit Anyways chevron_right",
+    });
+    this.roadDataLink = page.getByRole("link", { name: "सडक डेटा" });
+    this.homeButton = page.getByRole("button", { name: "home" });
+
+    // Search
+    this.searchBox = page.getByRole("textbox", {
+      name: "सडक नाम, सडक प्रकारले खोज्नुहोस्",
+    });
+    this.noDataCell = page.getByRole("cell", { name: "No Data found." });
+
+    // Inputs
+    this.roadNameEn = page.locator('input[name="road_name_en"]');
+    this.deleteConfirmInput = page.getByRole("textbox", {
+      name: "Type delete",
+    });
+
+    // Buttons
+    this.moreMenuButton = page.getByRole("button", { name: "more_vert" });
+    this.editButton = page.getByText("editसम्पादन गर्नुहोस्");
+
+    this.nextButton = page.getByRole("button", {
+      name: /Next chevron_right|अर्को chevron_right/i,
+    });
+
+    this.completeButton = page.getByRole("button", {
+      name: "Complete chevron_right",
+    });
+
+    this.submitAnywaysButton = page.getByRole("button", {
+      name: "Submit Anyways chevron_right",
+    });
+
+    this.infoButton = page.getByRole("button", { name: "info" });
+    this.previewButton = page.getByRole("button", { name: "visibility" });
+    this.closePreviewButton = page.getByRole("button", {
+      name: /close Close modal/i,
+    });
+
+    this.deleteButton = page.getByRole("button", { name: "delete" });
+    this.deleteConfirmButton = page.getByRole("button", {
+      name: "delete Confirm",
     });
 
     // Map
@@ -135,5 +187,98 @@ export class AddRoadPage {
   async submitForm() {
     await this.completeButton.click();
     await this.submitAnywaysButton.click();
+  }
+  // ---------- SEARCH ----------
+  async searchRoad(name: string) {
+    await expect(this.searchBox).toBeVisible();
+    await this.searchBox.fill("");
+    await this.searchBox.fill(name);
+  }
+
+  async verifyRoadExists(name: string) {
+    await expect(this.page.getByRole("cell", { name })).toBeVisible();
+  }
+
+  async verifyRoadNotExists() {
+    await expect(this.noDataCell).toBeVisible();
+  }
+
+  // ---------- EDIT ----------
+  async editRoad(newName: string) {
+    await this.moreMenuButton.click();
+    await this.editButton.click();
+
+    await expect(this.roadNameEn).toBeVisible();
+    await this.roadNameEn.fill(newName);
+
+    await this.nextButton.click();
+    await this.nextButton.click();
+    await this.nextButton.click();
+
+    await this.completeButton.click();
+    await this.submitAnywaysButton.click();
+
+    // success toast (combined text)
+    await expect(
+      this.page.getByText(/Success.*Road Edited Successfully/i),
+    ).toBeVisible();
+  }
+
+  // ---------- INFO ----------
+  async openInfoAndVerify() {
+    await this.infoButton.first().click();
+    await expect(
+      this.page.locator("div", { hasText: "Road Type" }).first(),
+    ).toBeVisible();
+  }
+
+  // ---------- HOME ----------
+  async goHomeAndVerify() {
+    await this.homeButton.click();
+    await expect(this.page).toHaveURL(/visualization/);
+  }
+  // ---------- BACK TO LIST AND OPEN INFO ----------
+  async goToRoadListAndOpenInfo(roadName: string) {
+    await this.page.goto("/data-management/road-data", {
+      waitUntil: "networkidle",
+    });
+    await expect(this.searchBox).toBeVisible({ timeout: 10000 });
+    await this.searchBox.fill(roadName);
+    await this.page.keyboard.press("Enter");
+
+    // Click on the road row to open its info
+
+    // Verify the info panel opened (adjust this locator as needed)
+  }
+
+  // ---------- PREVIEW ----------
+
+  async openPreviewAndClose(roadName: string) {
+    // Click preview
+    await this.infoButton.first().click();
+    await this.previewButton.click();
+
+    // Wait for the modal container that contains the road name
+    const modal = this.page
+      .locator("div")
+      .filter({ hasText: roadName })
+      .first();
+    await expect(modal).toBeVisible({ timeout: 15000 });
+
+    // Wait for the close button inside the modal
+    const closeBtn = modal.getByRole("button", { name: /close/i });
+    await expect(closeBtn).toBeVisible({ timeout: 5000 });
+
+    // Click close
+    await closeBtn.click();
+
+    // Optional: wait until modal disappears
+  }
+
+  // ---------- DELETE ----------
+  async deleteRoad() {
+    await this.deleteButton.click();
+    await this.deleteConfirmInput.fill("delete");
+    await this.deleteConfirmButton.click();
   }
 }
