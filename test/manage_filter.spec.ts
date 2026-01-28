@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { FilterPage } from "../pages/ManageFilterPage";
 
 const chartTypes = [
@@ -9,16 +9,27 @@ const chartTypes = [
   "scatterChart",
 ];
 
-test.describe("Filter Module", () => {
+test.describe.serial("Filter Module - Single Browser Session", () => {
+  let page: Page;
   let filterPage: FilterPage;
 
-  test.beforeEach(async ({ page }) => {
+  // Runs once before all tests
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
     filterPage = new FilterPage(page);
     await page.goto("/setting/manage-filter");
   });
 
-  test("TC-01: Create a filter, search it, and delete it", async ({ page }) => {
-    const filterName = `test ${Math.floor(Math.random() * 1000)}`;
+  // Reload page between tests to reset state
+  test.afterEach(async () => {
+    await page.reload();
+  });
+
+  /**
+   * TC-01: Create a filter, search it, and delete it
+   */
+  test("TC-01: Create, search, and delete filter", async () => {
+    const filterName = `test-${Math.floor(Math.random() * 1000)}`;
     const layerName = "ram test";
 
     await filterPage.clickAddNewFilter();
@@ -40,9 +51,10 @@ test.describe("Filter Module", () => {
     expect(noDataVisible).toBe(true);
   });
 
-  test("TC-02: Create filter with empty name should show validation error", async ({
-    page,
-  }) => {
+  /**
+   * TC-02: Validation error when filter name is empty
+   */
+  test("TC-02: Empty filter name validation", async () => {
     await filterPage.clickAddNewFilter();
     await filterPage.selectFilterType("Filter 1");
     await filterPage.enterFilterName(""); // empty
@@ -54,99 +66,54 @@ test.describe("Filter Module", () => {
     const error = page.getByText("Required", { exact: true });
     await expect(error).toBeVisible();
   });
-  // test("TC-04: Search filter by name", async ({ page }) => {
-  //   const filterPage = new FilterPage(page);
-  //   const filterName = `search-test-${Math.floor(Math.random() * 1000)}`;
 
-  //   // Create a filter
-  //   await filterPage.clickAddNewFilter();
-  //   await filterPage.selectFilterType("Filter 1");
-  //   await filterPage.enterFilterName(filterName);
-  //   await filterPage.selectLayer("ram test");
-  //   await filterPage.setCondition("governmental");
-  //   await filterPage.previewTable();
-  //   await filterPage.selectRows([1, 2]);
-  //   await filterPage.saveFilter();
+  /**
+   * TC-03: Chart-specific filters (bar, donut, etc.)
+   */
+  chartTypes.forEach((chart) => {
+    test(`TC-03: Create, search, and delete filter for ${chart}`, async () => {
+      const filterName = `filter2-${chart}`;
+      const layerName = "ram test";
 
-  //   // Search for the filter
-  //   const row = await filterPage.searchFilter(filterName);
-  //   await expect(row).toBeVisible({ timeout: 10000 });
+      await page.goto("/setting/manage-filter");
 
-  //   // Search for non-existing filter
-  //   const notFoundRow = await filterPage.searchFilter("non-existing-filter");
-  //   expect(await filterPage.isNoDataFoundVisible()).toBe(true);
+      // --- Create Filter ---
+      await filterPage.clickAddNewFilter();
+      await filterPage.selectFilterType("Filter 2");
+      await filterPage.enterFilterName(filterName);
+      await filterPage.selectLayer(layerName);
+      await filterPage.selectType();
 
-  //   // Clean up
-  //   await filterPage.deleteFilter(filterName);
-  // });
+      // --- Generate Chart ---
+      await page.getByRole("button", { name: "Generate Chart" }).click();
 
-  // test("TC-05: Cancel filter creation", async ({ page }) => {
-  //   const filterPage = new FilterPage(page);
-  //   const filterName = `cancel-test-${Math.floor(Math.random() * 1000)}`;
+      // --- Click chart-specific info ---
+      await page
+        .locator(
+          "div.head p.w-full.text-base.font-bold.capitalize.text-grey-800",
+          { hasText: chart },
+        )
+        .first()
+        .click();
 
-  //   await filterPage.clickAddNewFilter();
-  //   await filterPage.selectFilterType("Filter 1");
-  //   await filterPage.enterFilterName(filterName);
-  //   await filterPage.selectLayer("ram test");
-  //   await filterPage.setCondition("governmental");
+      // --- Save Filter ---
+      await filterPage.saveFilter();
+      const successMsg = page.getByText(
+        /SuccessNew Filter Added Successfully/i,
+      );
+      await expect(successMsg).toBeVisible({ timeout: 10000 });
+      await successMsg.click();
 
-  //   // Cancel instead of saving
-  //   await page.getByRole("button", { name: "Cancel" }).click();
+      // --- Search & Verify ---
+      const row = await filterPage.searchFilter(filterName);
+      await expect(row).toBeVisible({ timeout: 10000 });
 
-  //   // Verify filter is not added
-  //   await filterPage.searchFilter(filterName);
-  //   expect(await filterPage.isNoDataFoundVisible()).toBe(true);
-  // });
+      // --- Delete ---
+      const deleteMsg = await filterPage.deleteFilter(filterName);
+      await expect(deleteMsg).toBeVisible({ timeout: 10000 });
 
-  test.describe.parallel("Filter Module - Chart Filters", () => {
-    chartTypes.forEach((chart) => {
-      test(`TC-03: Create filter for ${chart}, search, and delete`, async ({
-        page,
-      }) => {
-        const filterPage = new FilterPage(page);
-        const filterName = `filter2-${chart}`;
-        const layerName = "ram test";
-
-        await page.goto("/setting/manage-filter");
-
-        // --- Create Filter ---
-        await filterPage.clickAddNewFilter();
-        await filterPage.selectFilterType("Filter 2");
-        await filterPage.enterFilterName(filterName);
-        await filterPage.selectLayer(layerName);
-        await filterPage.selectType();
-
-        // --- Generate Chart ---
-        await page.getByRole("button", { name: "Generate Chart" }).click();
-
-        // --- Click chart-specific info ---
-        await page
-          .locator(
-            "div.head p.w-full.text-base.font-bold.capitalize.text-grey-800",
-            { hasText: chart },
-          )
-          .first()
-          .click();
-
-        // --- Save Filter ---
-        await filterPage.saveFilter();
-        const successMsg = page.getByText(
-          /SuccessNew Filter Added Successfully/i,
-        );
-        await expect(successMsg).toBeVisible({ timeout: 10000 });
-        await successMsg.click();
-
-        // --- Search & Verify ---
-        const row = await filterPage.searchFilter(filterName);
-        await expect(row).toBeVisible({ timeout: 10000 });
-
-        // --- Delete ---
-        const deleteMsg = await filterPage.deleteFilter(filterName);
-        await expect(deleteMsg).toBeVisible({ timeout: 10000 });
-
-        const noDataVisible = await filterPage.isNoDataFoundVisible();
-        expect(noDataVisible).toBe(true);
-      });
+      const noDataVisible = await filterPage.isNoDataFoundVisible();
+      expect(noDataVisible).toBe(true);
     });
   });
 });

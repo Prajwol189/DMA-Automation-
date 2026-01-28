@@ -1,41 +1,37 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { VisualizationPage } from "../pages/VisualizationPage";
 
-/**
- * Test suite: Visualization - Base Map Verification
- * This suite verifies various functionalities of the Visualization page including:
- * - Base map loading
- * - Layer toggles (road, building, administrative boundaries)
- * - Toolbox actions (add house, add road, proximity analysis)
- * - Map interactions (GPS pin clicks, distance measurement)
- * - Export functionality
- */
-test.describe("Visualization - Base Map Verification", () => {
+test.describe
+  .serial("Visualization - Base Map Verification (Single Browser)", () => {
+  let page: Page;
   let visualizationPage: VisualizationPage;
 
-  // Runs before each test in this suite
-  test.beforeEach(async ({ page }) => {
+  // Runs once before all tests
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
     visualizationPage = new VisualizationPage(page);
 
     // Navigate to the visualization page
     await page.goto("/visualization");
     await page.waitForTimeout(2000);
-    page.reload();
+    await page.reload();
     await page.waitForTimeout(2000);
-    // Ensure page is fully loaded
+  });
+
+  // Reload page between tests to reset state
+  test.afterEach(async () => {
+    await page.reload();
+    await page.waitForTimeout(2000);
   });
 
   /**
-   * Test: Verify Naxa Layer & Satellite base maps load correctly
+   * TC-01: Verify Naxa Layer & Satellite base maps load correctly
    */
-  test("TC-01: Verify Naxa Layer & Satellite base maps load correctly", async () => {
-    // Select and verify Naxa Layer
+  test("TC-01: Base maps load correctly", async () => {
     await visualizationPage.selectBaseMap(
       visualizationPage.naxaLayerMap,
       "shortbread_v1",
     );
-
-    // Select and verify Satellite Layer
     await visualizationPage.selectBaseMap(
       visualizationPage.satelliteMap,
       "World_Imagery/MapServer/tile",
@@ -43,52 +39,47 @@ test.describe("Visualization - Base Map Verification", () => {
   });
 
   /**
-   * Test: Verify toggling Road and Building layers
-   * - Turn OFF, refresh, and verify API is NOT called
-   * - Turn ON, refresh, and verify API is called
+   * TC-02: Default ON -> OFF -> ON (Road + Building API verify)
    */
-  test("Default ON -> OFF -> ON (Road + Building API verify)", async ({
-    page,
-  }) => {
-    const viz = new VisualizationPage(page);
-
-    await viz.openLayerPanel();
+  test("TC-02: Road + Building toggle API verification", async () => {
+    await visualizationPage.openLayerPanel();
 
     const roadToggle = page.getByRole("switch").first();
     const buildingToggle = page.getByRole("switch").nth(1);
 
     // ROAD OFF
     await roadToggle.click();
-    await viz.refreshMapTiles();
-    await viz.verifyApiNotCalled("/api/v1/tile/road-vector-tile/");
+    await visualizationPage.refreshMapTiles();
+    await visualizationPage.verifyApiNotCalled(
+      "/api/v1/tile/road-vector-tile/",
+    );
     await page.waitForTimeout(2000);
+
     // ROAD ON
-    await viz.toggleOnAndVerifyApi(
+    await visualizationPage.toggleOnAndVerifyApi(
       roadToggle,
       "/api/v1/tile/road-vector-tile/",
     );
 
     // BUILDING OFF
     await buildingToggle.click();
-
-    await viz.refreshMapTiles();
-
-    await viz.verifyApiNotCalled("/api/v1/tile/building-vector-tile/");
+    await visualizationPage.refreshMapTiles();
+    await visualizationPage.verifyApiNotCalled(
+      "/api/v1/tile/building-vector-tile/",
+    );
 
     // BUILDING ON
-    await viz.toggleOnAndVerifyApi(
+    await visualizationPage.toggleOnAndVerifyApi(
       buildingToggle,
       "/api/v1/tile/building-vector-tile/",
     );
   });
 
   /**
-   * Test: Verify Palika and Ward boundary toggles
+   * TC-03: Palika + Ward boundary toggle ON/OFF API verify
    */
-  test("Palika + Ward boundary toggle ON/OFF API verify", async ({ page }) => {
-    const viz = new VisualizationPage(page);
-
-    await viz.openLayerPanel();
+  test("TC-03: Administrative boundaries toggle", async () => {
+    await visualizationPage.openLayerPanel();
 
     // Expand Administrative Boundaries section
     await page.getByText("Administrative Boundariesexpand_more").click();
@@ -96,157 +87,135 @@ test.describe("Visualization - Base Map Verification", () => {
     const wardToggle = page.getByRole("switch").nth(2);
     const palikaToggle = page.getByRole("switch").nth(3);
 
-    // WARD OFF (default ON)
+    // WARD OFF
     await wardToggle.click();
-    await viz.refreshMapTiles();
-    await viz.verifyApiNotCalled("/api/v1/tile/palika-ward-boundary/");
+    await visualizationPage.refreshMapTiles();
+    await visualizationPage.verifyApiNotCalled(
+      "/api/v1/tile/palika-ward-boundary/",
+    );
 
     // WARD ON
-    await viz.toggleOnAndVerifyApi(
+    await visualizationPage.toggleOnAndVerifyApi(
       wardToggle,
       "/api/v1/tile/palika-ward-boundary/",
     );
 
-    // PALIKA OFF (default ON)
+    // PALIKA OFF
     await palikaToggle.click();
-    await viz.refreshMapTiles();
-    await viz.verifyApiNotCalled("/api/v1/tile/palika-boundary/");
+    await visualizationPage.refreshMapTiles();
+    await visualizationPage.verifyApiNotCalled("/api/v1/tile/palika-boundary/");
 
     // PALIKA ON
-    await viz.toggleOnAndVerifyApi(
+    await visualizationPage.toggleOnAndVerifyApi(
       palikaToggle,
       "/api/v1/tile/palika-boundary/",
     );
   });
 
   /**
-   * Test: Verify Toolbox actions - Add House / Add Road
+   * TC-04: Toolbox Add House / Add Road navigation verify
    */
-  test("Toolbox Add House / Add Road navigation verify", async ({ page }) => {
-    const viz = new VisualizationPage(page);
-
-    await viz.openToolbox();
+  test("TC-04: Toolbox Add House / Add Road", async () => {
+    await visualizationPage.openToolbox();
 
     // Add House
-    await viz.clickAddHouse();
-    await viz.verifyBuildingFormUrl();
-
-    // Go back to visualization page
+    await visualizationPage.clickAddHouse();
+    await visualizationPage.verifyBuildingFormUrl();
     await page.goBack();
 
-    await viz.openToolbox();
+    await visualizationPage.openToolbox();
 
     // Add Road
-    await viz.clickAddRoad();
-    await viz.verifyRoadFormUrl();
+    await visualizationPage.clickAddRoad();
+    await visualizationPage.verifyRoadFormUrl();
   });
 
   /**
-   * Test: Verify map export functionality (A3, A2, A1)
+   * TC-05: Export map in different sizes
    */
-  test("Export map in different sizes", async ({ page }) => {
-    const exportPage = new VisualizationPage(page);
-    await exportPage.waitForMapToLoad();
-    // Open export menu
+  test("TC-05: Map export functionality", async () => {
+    await visualizationPage.waitForMapToLoad();
     await page
       .locator("div")
       .filter({ hasText: /^build_circle$/ })
       .click();
+    await visualizationPage.exportBtn.click();
 
-    await exportPage.exportBtn.click();
+    await visualizationPage.selectA3fromA4();
+    await visualizationPage.downloadAndVerify();
 
-    // Export and verify different sizes
-    await exportPage.selectA3fromA4();
-    await exportPage.downloadAndVerify();
+    await visualizationPage.selectA2fromA3();
+    await visualizationPage.downloadAndVerify();
 
-    await exportPage.selectA2fromA3();
-    await exportPage.downloadAndVerify();
-
-    await exportPage.selectA1fromA2();
-    await exportPage.downloadAndVerify();
+    await visualizationPage.selectA1fromA2();
+    await visualizationPage.downloadAndVerify();
   });
 
   /**
-   * Test: Proximity Analysis workflow
+   * TC-06: Proximity Analysis workflow
    */
-  test("Proximity Analysis - POM", async ({ page }) => {
-    const toolbox = new VisualizationPage(page);
+  test("TC-06: Proximity Analysis", async () => {
+    await visualizationPage.openToolbox();
+    await visualizationPage.clickNearDistance();
+    await visualizationPage.selectHouse();
+    await visualizationPage.waitForMapToLoad();
 
-    await toolbox.openToolbox();
-    await toolbox.clickNearDistance();
-    await toolbox.selectHouse();
-    await toolbox.waitForMapToLoad();
+    await visualizationPage.clickOnMap(537, 510);
+    await visualizationPage.enterRadius("50");
+    await visualizationPage.runAnalysis();
+    await visualizationPage.waitForMapToLoad();
+    await visualizationPage.verifyResultVisible();
 
-    // Click map, enter radius, and run analysis
-    await toolbox.clickOnMap(537, 510);
-    await toolbox.enterRadius("50");
-    await toolbox.runAnalysis();
-    await toolbox.waitForMapToLoad();
-    await toolbox.verifyResultVisible();
-
-    // Verify default toggles for building/road layers
-    await toolbox.verifyTogglesDefaultOn();
-
-    // Toggle verification (API checks)
-    await toolbox.toggleBuildingOff();
-    await toolbox.toggleBuildingOn();
-    await toolbox.toggleRoadOff();
-    await toolbox.toggleRoadOn();
+    // Toggle verification
+    await visualizationPage.verifyTogglesDefaultOn();
+    await visualizationPage.toggleBuildingOff();
+    await visualizationPage.toggleBuildingOn();
+    await visualizationPage.toggleRoadOff();
+    await visualizationPage.toggleRoadOn();
   });
 
   /**
-   * Test: Distance measurement tool
+   * TC-07: Measurement sum should match total
    */
-  test("Measurement sum should match total", async ({ page }) => {
-    const measurementPage = new VisualizationPage(page);
+  test("TC-07: Distance measurement tool", async () => {
+    await visualizationPage.openDistanceTool();
+    await visualizationPage.waitForMapToLoad();
 
-    await measurementPage.openDistanceTool();
-    await measurementPage.waitForMapToLoad();
-
-    // Draw distance lines on the map
-    await measurementPage.drawDistance([
+    await visualizationPage.drawDistance([
       { x: 616, y: 203 },
       { x: 635, y: 252 },
       { x: 629, y: 314 },
       { x: 658, y: 374 },
-      { x: 658, y: 374 }, // double click / last point
+      { x: 658, y: 374 },
     ]);
 
-    // Verify sum matches expected total
-    await measurementPage.expectSumEqualsTotal(
+    await visualizationPage.expectSumEqualsTotal(
       ["652.94 m", "773.93 m", "828.04 m"],
       "2254.90 m",
     );
   });
 
   /**
-   * Test: Verify GPS pin clicks trigger correct my-location-info API
+   * TC-08: Verify GPS pin map clicks trigger correct my-location-info API
    */
-  test("Verify GPS pin map clicks trigger correct my-location-info API", async ({
-    page,
-  }) => {
-    const mapPage = new VisualizationPage(page);
+  test("TC-08: GPS pin click API verification", async () => {
+    await visualizationPage.openGpsPinTool();
 
-    await mapPage.openGpsPinTool();
-
-    // First click
-    await mapPage.clickMapAndVerifyApi(
+    await visualizationPage.clickMapAndVerifyApi(
       653,
       292,
       27.782570623984967,
       85.33527454190073,
     );
 
-    // Second click
-    await mapPage.clickMapAndVerifyApi(
+    await visualizationPage.clickMapAndVerifyApi(
       615,
       411,
       27.769272947009412,
       85.33047523366326,
     );
 
-    // Repeat first coordinate
-    await mapPage.clickMapAndVerifyApi(
+    await visualizationPage.clickMapAndVerifyApi(
       653,
       292,
       27.782570623984967,

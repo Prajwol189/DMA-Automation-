@@ -1,61 +1,52 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { AddRoadPage } from "../pages/AddRoadPage";
 
-/**
- * Test Suite: Add Road Feature
- * Covers:
- *  - Successful road creation
- *  - Mandatory field validations
- *  - Map drawing validations
- */
-test.describe("Add Road - Test Cases", () => {
+test.describe.serial("Add Road - All in one browser", () => {
+  let page: Page;
   let roadPage: AddRoadPage;
 
-  /**
-   * Runs before each test
-   * Uses stored login session (NO LOGIN HERE)
-   */
-  test.beforeEach(async ({ page }) => {
+  // Runs once before all tests
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
     roadPage = new AddRoadPage(page);
 
-    // Directly navigate to road module
+    // Navigate directly to road form page
     await page.goto("/data-management/road-data/form");
+  });
+
+  // Reset form between tests
+  test.afterEach(async () => {
+    await page.reload();
   });
 
   /**
    * ✅ TC-01: Add road with all mandatory fields (Happy Path)
    */
   test("TC-01: Add new road successfully", async () => {
-    // Step 1: Basic details
     await roadPage.selectDropdown(roadPage.roadCategory, "Major");
     await roadPage.fillRoadName("dallu");
     await roadPage.clickNext();
     await roadPage.page.waitForTimeout(3000);
-    // Step 2: Draw road geometry on map
     await roadPage.drawRoadOnMapRelative([
       { x: 0.45, y: 0.52 },
       { x: 0.55, y: 0.48 },
       { x: 0.65, y: 0.5 },
     ]);
     await roadPage.clickNext();
-
-    // Step 3: Road classification
     await roadPage.selectDropdown(
       roadPage.administrativeClass,
       "National highway",
     );
     await roadPage.selectDropdown(roadPage.roadSurfaceType, "Black Topped");
     await roadPage.selectDropdown(roadPage.municipalRoadClass, "A");
-
     await roadPage.clickNext();
-
-    // Step 4: Submit form
     await roadPage.submitForm();
 
-    // Validation
     await expect(
       roadPage.page.getByText(/road added successfully/i),
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   /**
@@ -107,6 +98,7 @@ test.describe("Add Road - Test Cases", () => {
     ]);
     await roadPage.clickNext();
 
+    // Skip administrative class
     await roadPage.clickNext();
 
     await expect(roadPage.page.getByText("Required").first()).toBeVisible({
@@ -134,6 +126,7 @@ test.describe("Add Road - Test Cases", () => {
       "National highway",
     );
 
+    // Skip road surface type
     await roadPage.clickNext();
 
     await expect(roadPage.page.getByText(/बाटो प्रकार/i)).toBeVisible();
@@ -160,6 +153,7 @@ test.describe("Add Road - Test Cases", () => {
     );
     await roadPage.selectDropdown(roadPage.roadSurfaceType, "Black Topped");
 
+    // Skip municipal road class
     await roadPage.clickNext();
 
     await expect(roadPage.page.getByText(/नगर सडक वर्ग/i)).toBeVisible();
