@@ -6,15 +6,15 @@
       "localStorage": [
         {
           "name": "accessToken",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5NDI3MDIzLCJpYXQiOjE3Njk0MDU0MjMsImp0aSI6IjAxOTA5YjYwYzhiMjQ1ZTVhMDRkYTQ0YjQzOTMxODg2IiwidXNlcl9pZCI6MX0.fe0NqMPQI_qOb6wO6YPRkZUJNHMpc8EMtINwxKQY4wI"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5NTA5NjEzLCJpYXQiOjE3Njk0ODgwMTMsImp0aSI6ImUyOTcyMzk4N2I4MzRlMTg4MjhjYWMzZDM5OGFlYmMwIiwidXNlcl9pZCI6MX0.fc7gXyXezIXM6YWBU2WnEbSEGYjJ4anP1mINj95Xg_o"
         },
         {
           "name": "persist:user",
-          "value": "{\"user\":\"{\\\"refresh\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTQ5MTgyMywiaWF0IjoxNzY5NDA1NDIzLCJqdGkiOiIzMjIzYjczNTk5MGE0Mjg4YTgyODZkMTljNzg5OGI5MiIsInVzZXJfaWQiOjF9.S8sICGZ5VHSwnqoYe8qsneK3-Cas16PVsxBBzMjDtuo\\\",\\\"access\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5NDI3MDIzLCJpYXQiOjE3Njk0MDU0MjMsImp0aSI6IjAxOTA5YjYwYzhiMjQ1ZTVhMDRkYTQ0YjQzOTMxODg2IiwidXNlcl9pZCI6MX0.fe0NqMPQI_qOb6wO6YPRkZUJNHMpc8EMtINwxKQY4wI\\\",\\\"user_id\\\":1,\\\"email\\\":\\\"dma-dev@naxa.com\\\",\\\"username\\\":\\\"Dma Admin Naxa\\\"}\",\"userProfile\":\"null\",\"permissions\":\"[]\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
+          "value": "{\"user\":\"{\\\"refresh\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTU3NDQxMywiaWF0IjoxNzY5NDg4MDEzLCJqdGkiOiI1YjJhMjI3NDZlZDM0YTllOWM5MzFhODFjMzg2NDBlOCIsInVzZXJfaWQiOjF9.iRSl8E5WJM-kTlVe9pJYUXMJf9yqEYWbv1E2QE9AHbM\\\",\\\"access\\\":\\\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5NTA5NjEzLCJpYXQiOjE3Njk0ODgwMTMsImp0aSI6ImUyOTcyMzk4N2I4MzRlMTg4MjhjYWMzZDM5OGFlYmMwIiwidXNlcl9pZCI6MX0.fc7gXyXezIXM6YWBU2WnEbSEGYjJ4anP1mINj95Xg_o\\\",\\\"user_id\\\":1,\\\"email\\\":\\\"dma-dev@naxa.com\\\",\\\"username\\\":\\\"Dma Admin Naxa\\\"}\",\"userProfile\":\"null\",\"permissions\":\"[]\",\"_persist\":\"{\\\"version\\\":-1,\\\"rehydrated\\\":true}\"}"
         },
         {
           "name": "refreshToken",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTQ5MTgyMywiaWF0IjoxNzY5NDA1NDIzLCJqdGkiOiIzMjIzYjczNTk5MGE0Mjg4YTgyODZkMTljNzg5OGI5MiIsInVzZXJfaWQiOjF9.S8sICGZ5VHSwnqoYe8qsneK3-Cas16PVsxBBzMjDtuo"
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2OTU3NDQxMywiaWF0IjoxNzY5NDg4MDEzLCJqdGkiOiI1YjJhMjI3NDZlZDM0YTllOWM5MzFhODFjMzg2NDBlOCIsInVzZXJfaWQiOjF9.iRSl8E5WJM-kTlVe9pJYUXMJf9yqEYWbv1E2QE9AHbM"
         }
       ]
     }
