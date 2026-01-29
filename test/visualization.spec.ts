@@ -1,8 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 import { VisualizationPage } from "../pages/VisualizationPage";
 
-test.describe
-  .serial("Visualization - Base Map Verification (Single Browser)", () => {
+test.describe("Visualization - Base Map Verification (Single Browser)", () => {
   let page: Page;
   let visualizationPage: VisualizationPage;
 
@@ -174,6 +173,172 @@ test.describe
     await visualizationPage.toggleRoadOn();
   });
 
+  /**
+   * ✅ TC-06: Proximity Analysis – Happy Path
+   */
+  test("TC-06: Proximity Analysis with valid inputs", async () => {
+    await visualizationPage.openToolbox();
+    await visualizationPage.clickNearDistance();
+    await visualizationPage.selectHouse();
+
+    await visualizationPage.clickOnMap(537, 510);
+    await visualizationPage.enterRadius("50");
+    await visualizationPage.runAnalysis();
+    await visualizationPage.waitForMapToLoad();
+
+    await visualizationPage.verifyResultVisible();
+
+    // Toggle verification
+    await visualizationPage.verifyTogglesDefaultOn();
+    await visualizationPage.toggleBuildingOff();
+    await visualizationPage.toggleBuildingOn();
+    await visualizationPage.toggleRoadOff();
+    await visualizationPage.toggleRoadOn();
+  });
+
+  /**
+   * ❌ TC-07: Run analysis without selecting map location
+   */
+
+  // test("TC-07: Proximity - without map click", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.enterRadius("50");
+  //   await visualizationPage.runAnalysis();
+
+  //   await visualizationPage.verifyErrorMessage(
+  //     "Please select a location on the map",
+  //   );
+  // });
+  /**
+  test("TC-07: Proximity - without map click", async () => {
+    await visualizationPage.openToolbox();
+    await visualizationPage.clickNearDistance();
+    await visualizationPage.selectHouse();
+
+    await visualizationPage.enterRadius("50");
+    await visualizationPage.runAnalysis();
+
+    await visualizationPage.verifyErrorMessage(
+      "Please select a location on the map"
+    );
+  });
+
+  /**
+   * ❌ TC-08: Radius is empty
+   */
+  // test("TC-08: Proximity - empty radius", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.runAnalysis();
+
+  //   await visualizationPage.verifyErrorMessage("Radius is required");
+  // });
+
+  /**
+   * ❌ TC-09: Radius is zero
+   */
+  // test("TC-09: Proximity - zero radius", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.enterRadius("0");
+  //   await visualizationPage.runAnalysis();
+
+  //   await visualizationPage.verifyErrorMessage(
+  //     "Radius must be greater than 0"
+  //   );
+  // });
+
+  /**
+   * ❌ TC-10: Negative radius value
+   */
+  // test("TC-10: Proximity - negative radius", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.enterRadius("-10");
+  //   await visualizationPage.runAnalysis();
+
+  //   await visualizationPage.verifyErrorMessage("Invalid radius value");
+  // });
+
+  /**
+   * ❌ TC-11: Non-numeric radius
+   */
+  // test("TC-11: Proximity - non numeric radius", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.enterRadius("abc");
+  //   await visualizationPage.runAnalysis();
+
+  //   await visualizationPage.verifyErrorMessage(
+  //     "Radius must be a number"
+  //   );
+  // });
+
+  /**
+   * ⚠️ TC-12: Minimum radius boundary
+   */
+  // test("TC-12: Proximity - minimum radius boundary", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.enterRadius("1");
+  //   await visualizationPage.runAnalysis();
+  //   await visualizationPage.waitForMapToLoad();
+
+  //   await visualizationPage.verifyResultVisible();
+  // });
+
+  /**
+   * ⚠️ TC-13: Very large radius value
+   */
+  // test("TC-13: Proximity - large radius", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.enterRadius("100000");
+  //   await visualizationPage.runAnalysis();
+  //   await visualizationPage.waitForMapToLoad();
+
+  //   await visualizationPage.verifyResultVisible();
+  // });
+
+  // /**
+  //  * 🔁 TC-14: Toggle persistence after re-running analysis
+  //  */
+  // test("TC-14: Proximity - toggle persistence after re-run", async () => {
+  //   await visualizationPage.openToolbox();
+  //   await visualizationPage.clickNearDistance();
+  //   await visualizationPage.selectHouse();
+
+  //   await visualizationPage.clickOnMap(537, 510);
+  //   await visualizationPage.enterRadius("50");
+  //   await visualizationPage.runAnalysis();
+  //   await visualizationPage.verifyResultVisible();
+
+  //   await visualizationPage.toggleBuildingOff();
+  //   await visualizationPage.runAnalysis();
+
+  //   await visualizationPage.verifyBuildingLayerHidden();
+  // });
   /**
    * TC-07: Measurement sum should match total
    */
