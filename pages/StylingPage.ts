@@ -34,6 +34,12 @@ export class StylingPage {
     await this.page.getByRole("listitem").filter({ hasText: type }).click();
   }
 
+  async verifyBaseMapApi(pattern: string) {
+    const tileRequestPromise = this.page.waitForResponse(
+      (res) => res.url().includes(pattern) && res.status() === 200,
+      { timeout: 30000 },
+    );
+  }
   async saveAndVerify() {
     await this.saveBtn.click();
     await this.page.waitForTimeout(1000); // optional small wait for toast
