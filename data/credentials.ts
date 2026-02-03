@@ -1,7 +1,7 @@
 export const CREDENTIALS = {
   valid: {
-    email: "municipaleditor@mailinator.com",
-    password: "Pr@123rty",
+    email: "dma-dev@naxa.com",
+    password: "admin@naxa##",
   },
   invalid: {
     wrongPassword: "WrongPass123",

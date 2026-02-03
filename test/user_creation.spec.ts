@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { UserManagementPage } from "../pages/UserManagementPage";
-import { LoginPage } from "../pages/LoginPage";
-import { CREDENTIALS } from "../data/credentials";
+import { activateUserViaMailinator } from "../utils/mailinator";
 
 const ROLES = [
   "Data editor",
@@ -12,43 +11,45 @@ const ROLES = [
   "Super admin",
 ];
 
-test.describe("User Creation - All Roles", () => {
+test.describe("User Creation + Activation - All Roles", () => {
+  test.describe.configure({ mode: "serial" });
+
   let userPage: UserManagementPage;
-  let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
     userPage = new UserManagementPage(page);
-
-    await loginPage.goto();
-    await loginPage.login(CREDENTIALS.valid.email, CREDENTIALS.valid.password);
-
-    await userPage.goto();
+    await page.goto("/user-management");
   });
 
   for (const role of ROLES) {
-    test(`Create user with role: ${role}`, async () => {
+    test(`Create & activate user: ${role}`, async ({ page }) => {
       const rand = Date.now();
+
+      const email = `${role
+        .toLowerCase()
+        .replace(/\s+/g, "_")}_${rand}@mailinator.com`;
+
+      const inbox = email.split("@")[0];
+      const password = "Pr@123rty";
 
       const user = {
         name: `Auto ${role} ${rand}`,
-        email: `${role
-          .toLowerCase()
-          .replace(/\s+/g, "_")}_${rand}@mailinator.com`,
+        email,
         designation: "Automation Tester",
         role,
       };
 
+      // Create user
       await userPage.clickAddUser();
       await userPage.fillUserForm(user);
       await userPage.submit();
 
-      // ✅ Success validation
-      const toast = userPage.page.getByText(/user added successfully/i);
-      await expect(toast).toBeVisible({ timeout: 10000 });
+      await expect(page.getByText(/user added successfully/i)).toBeVisible({
+        timeout: 10000,
+      });
 
-      // ✅ Optional table validation
-      // await expect(userPage.page.getByText(user.email)).toBeVisible();
+      // Activate + logout + login
+      await activateUserViaMailinator(page, inbox, email, password);
     });
   }
 });
