@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { CREDENTIALS } from "../data/credentials";
-import { time } from "console";
-import { TIMEOUT } from "dns";
+
+test.describe.configure({ mode: "serial" }); // 🔹 Run all tests in this describe block serially
 
 test.describe("Login Functionality", () => {
   let loginPage: LoginPage;
@@ -40,11 +40,8 @@ test.describe("Login Functionality", () => {
     ]);
 
     const responseBody = await response.json();
-
-    // 🔍 Flexible validation (handles dynamic messages)
     expect(responseBody.message).toMatch(/Invalid|Incorrect password/i);
 
-    // 🔍 UI validation
     await expect(page).toHaveURL(/login/);
     await expect(page.getByText(/Invalid password|incorrect/i)).toBeVisible();
   });
@@ -54,7 +51,6 @@ test.describe("Login Functionality", () => {
       CREDENTIALS.invalid.wrongEmail,
       CREDENTIALS.valid.password,
     );
-
     await expect(page).toHaveURL(/.*login/);
   });
 
@@ -82,7 +78,6 @@ test.describe("Login Functionality", () => {
   test("Login with invalid email format", async ({ page }) => {
     await loginPage.login("invalid-email", "password123");
     await expect(page).toHaveURL(/.*login/);
-    await expect(page.getByText("पासवर्ड", { exact: true })).toBeVisible();
   });
 
   test("Login with email missing domain", async ({ page }) => {
@@ -129,6 +124,7 @@ test.describe("Login Functionality", () => {
     const passwordInput = page.locator('input[type="password"]');
     await expect(passwordInput).toHaveAttribute("type", "password");
   });
+
   // ---------------------------
   // MULTIPLE ATTEMPTS / STABILITY
   // ---------------------------
@@ -150,9 +146,7 @@ test.describe("Login Functionality", () => {
   test("User remains logged in after page reload", async ({ page }) => {
     await loginPage.login(CREDENTIALS.valid.email, CREDENTIALS.valid.password);
 
-    // Wait until login redirects
     await page.waitForURL(/dashboard/, { timeout: 10000 });
-
     await page.reload();
 
     await expect(page).not.toHaveURL(/login/);

@@ -1,6 +1,9 @@
 import { test, expect, Page } from "@playwright/test";
 import { VisualizationPage } from "../pages/VisualizationPage";
 
+// ⚡ Run all tests in this describe block serially
+test.describe.configure({ mode: "serial" });
+
 test.describe("Visualization - Base Map Verification (Single Browser)", () => {
   let page: Page;
   let visualizationPage: VisualizationPage;
@@ -23,9 +26,9 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     await page.waitForTimeout(2000);
   });
 
-  /**
-   * TC-01: Verify Naxa Layer & Satellite base maps load correctly
-   */
+  // ---------------------------
+  // TC-01: Base maps load correctly
+  // ---------------------------
   test("TC-01: Base maps load correctly", async () => {
     await visualizationPage.selectBaseMap(
       visualizationPage.naxaLayerMap,
@@ -37,9 +40,9 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     );
   });
 
-  /**
-   * TC-02: Default ON -> OFF -> ON (Road + Building API verify)
-   */
+  // ---------------------------
+  // TC-02: Road + Building toggle API verification
+  // ---------------------------
   test("TC-02: Road + Building toggle API verification", async () => {
     await visualizationPage.openLayerPanel();
 
@@ -74,13 +77,11 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     );
   });
 
-  /**
-   * TC-03: Palika + Ward boundary toggle ON/OFF API verify
-   */
+  // ---------------------------
+  // TC-03: Administrative boundaries toggle
+  // ---------------------------
   test("TC-03: Administrative boundaries toggle", async () => {
     await visualizationPage.openLayerPanel();
-
-    // Expand Administrative Boundaries section
     await page.getByText("Administrative Boundariesexpand_more").click();
 
     const wardToggle = page.getByRole("switch").nth(2);
@@ -111,9 +112,9 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     );
   });
 
-  /**
-   * TC-04: Toolbox Add House / Add Road navigation verify
-   */
+  // ---------------------------
+  // TC-04: Toolbox Add House / Add Road
+  // ---------------------------
   test("TC-04: Toolbox Add House / Add Road", async () => {
     await visualizationPage.openToolbox();
 
@@ -127,11 +128,12 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     // Add Road
     await visualizationPage.clickAddRoad();
     await visualizationPage.verifyRoadFormUrl();
+    await page.goBack();
   });
 
-  /**
-   * TC-05: Export map in different sizes
-   */
+  // ---------------------------
+  // TC-05: Map export functionality
+  // ---------------------------
   test("TC-05: Map export functionality", async () => {
     await visualizationPage.waitForMapToLoad();
     await page
@@ -150,14 +152,13 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     await visualizationPage.downloadAndVerify();
   });
 
-  /**
-   * TC-06: Proximity Analysis workflow
-   */
+  // ---------------------------
+  // TC-06: Proximity Analysis
+  // ---------------------------
   test("TC-06: Proximity Analysis", async () => {
     await visualizationPage.openToolbox();
     await visualizationPage.clickNearDistance();
     await visualizationPage.selectHouse();
-    await visualizationPage.waitForMapToLoad();
 
     await visualizationPage.clickOnMap(537, 510);
     await visualizationPage.enterRadius("50");
@@ -165,7 +166,6 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     await visualizationPage.waitForMapToLoad();
     await visualizationPage.verifyResultVisible();
 
-    // Toggle verification
     await visualizationPage.verifyTogglesDefaultOn();
     await visualizationPage.toggleBuildingOff();
     await visualizationPage.toggleBuildingOn();
@@ -173,175 +173,9 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     await visualizationPage.toggleRoadOn();
   });
 
-  /**
-   * ✅ TC-06: Proximity Analysis – Happy Path
-   */
-  test("TC-06: Proximity Analysis with valid inputs", async () => {
-    await visualizationPage.openToolbox();
-    await visualizationPage.clickNearDistance();
-    await visualizationPage.selectHouse();
-
-    await visualizationPage.clickOnMap(537, 510);
-    await visualizationPage.enterRadius("50");
-    await visualizationPage.runAnalysis();
-    await visualizationPage.waitForMapToLoad();
-
-    await visualizationPage.verifyResultVisible();
-
-    // Toggle verification
-    await visualizationPage.verifyTogglesDefaultOn();
-    await visualizationPage.toggleBuildingOff();
-    await visualizationPage.toggleBuildingOn();
-    await visualizationPage.toggleRoadOff();
-    await visualizationPage.toggleRoadOn();
-  });
-
-  /**
-   * ❌ TC-07: Run analysis without selecting map location
-   */
-
-  // test("TC-07: Proximity - without map click", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.enterRadius("50");
-  //   await visualizationPage.runAnalysis();
-
-  //   await visualizationPage.verifyErrorMessage(
-  //     "Please select a location on the map",
-  //   );
-  // });
-  /**
-  test("TC-07: Proximity - without map click", async () => {
-    await visualizationPage.openToolbox();
-    await visualizationPage.clickNearDistance();
-    await visualizationPage.selectHouse();
-
-    await visualizationPage.enterRadius("50");
-    await visualizationPage.runAnalysis();
-
-    await visualizationPage.verifyErrorMessage(
-      "Please select a location on the map"
-    );
-  });
-
-  /**
-   * ❌ TC-08: Radius is empty
-   */
-  // test("TC-08: Proximity - empty radius", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.runAnalysis();
-
-  //   await visualizationPage.verifyErrorMessage("Radius is required");
-  // });
-
-  /**
-   * ❌ TC-09: Radius is zero
-   */
-  // test("TC-09: Proximity - zero radius", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.enterRadius("0");
-  //   await visualizationPage.runAnalysis();
-
-  //   await visualizationPage.verifyErrorMessage(
-  //     "Radius must be greater than 0"
-  //   );
-  // });
-
-  /**
-   * ❌ TC-10: Negative radius value
-   */
-  // test("TC-10: Proximity - negative radius", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.enterRadius("-10");
-  //   await visualizationPage.runAnalysis();
-
-  //   await visualizationPage.verifyErrorMessage("Invalid radius value");
-  // });
-
-  /**
-   * ❌ TC-11: Non-numeric radius
-   */
-  // test("TC-11: Proximity - non numeric radius", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.enterRadius("abc");
-  //   await visualizationPage.runAnalysis();
-
-  //   await visualizationPage.verifyErrorMessage(
-  //     "Radius must be a number"
-  //   );
-  // });
-
-  /**
-   * ⚠️ TC-12: Minimum radius boundary
-   */
-  // test("TC-12: Proximity - minimum radius boundary", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.enterRadius("1");
-  //   await visualizationPage.runAnalysis();
-  //   await visualizationPage.waitForMapToLoad();
-
-  //   await visualizationPage.verifyResultVisible();
-  // });
-
-  /**
-   * ⚠️ TC-13: Very large radius value
-   */
-  // test("TC-13: Proximity - large radius", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.enterRadius("100000");
-  //   await visualizationPage.runAnalysis();
-  //   await visualizationPage.waitForMapToLoad();
-
-  //   await visualizationPage.verifyResultVisible();
-  // });
-
-  // /**
-  //  * 🔁 TC-14: Toggle persistence after re-running analysis
-  //  */
-  // test("TC-14: Proximity - toggle persistence after re-run", async () => {
-  //   await visualizationPage.openToolbox();
-  //   await visualizationPage.clickNearDistance();
-  //   await visualizationPage.selectHouse();
-
-  //   await visualizationPage.clickOnMap(537, 510);
-  //   await visualizationPage.enterRadius("50");
-  //   await visualizationPage.runAnalysis();
-  //   await visualizationPage.verifyResultVisible();
-
-  //   await visualizationPage.toggleBuildingOff();
-  //   await visualizationPage.runAnalysis();
-
-  //   await visualizationPage.verifyBuildingLayerHidden();
-  // });
-  /**
-   * TC-07: Measurement sum should match total
-   */
+  // ---------------------------
+  // TC-07: Distance measurement tool
+  // ---------------------------
   test("TC-07: Distance measurement tool", async () => {
     await visualizationPage.openDistanceTool();
     await visualizationPage.waitForMapToLoad();
@@ -360,9 +194,9 @@ test.describe("Visualization - Base Map Verification (Single Browser)", () => {
     );
   });
 
-  /**
-   * TC-08: Verify GPS pin map clicks trigger correct my-location-info API
-   */
+  // ---------------------------
+  // TC-08: GPS pin click API verification
+  // ---------------------------
   test("TC-08: GPS pin click API verification", async () => {
     await visualizationPage.openGpsPinTool();
 
